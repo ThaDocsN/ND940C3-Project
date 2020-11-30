@@ -9,10 +9,14 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
+import android.widget.RadioButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
+import com.udacity.databinding.ActivityMainBinding
+import com.udacity.databinding.ContentMainBinding
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
+import timber.log.Timber
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,16 +26,30 @@ class MainActivity : AppCompatActivity() {
     private lateinit var notificationManager: NotificationManager
     private lateinit var pendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
         setSupportActionBar(toolbar)
+        Timber.plant(Timber.DebugTree())
 
         registerReceiver(receiver, IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE))
 
-        custom_button.setOnClickListener {
-            download()
+        binding.contentView.customButton.setOnClickListener {
+            getUrl()
+        }
+    }
+
+    private fun getUrl() {
+        val btnId = binding.contentView.rgUrl.checkedRadioButtonId
+        val rb = findViewById<RadioButton>(btnId)
+        when (rb.text.toString()) {
+            binding.contentView.rbGlide.text -> download()
+            binding.contentView.rbStarterProject.text -> download()
+            binding.contentView.rbRetrofit.text -> download()
+            else -> download()
         }
     }
 
