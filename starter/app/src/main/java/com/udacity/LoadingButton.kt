@@ -3,19 +3,24 @@ package com.udacity
 import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import kotlin.math.min
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
+    private var radius = 0.0f
     private var widthSize = 0
     private var heightSize = 0
     private var txtString:String
     private var btnColor:Int
     private var txtColor:Int
+    private val xSpacing = 200.0
+    private val ySpacing = 15.0
     private var paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val valueAnimator = ValueAnimator()
@@ -39,13 +44,28 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        radius = (min(w, h) / 2 * .6).toFloat()
+
+    }
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         drawButton(canvas)
         drawText(canvas)
+        drawCircle(canvas)
 
     }
+
+    private fun drawCircle(canvas: Canvas) {
+        paint.apply {
+            color = Color.YELLOW
+            style = Paint.Style.FILL
+        }
+        canvas.drawCircle((measuredWidth.toFloat() / 2 + xSpacing).toFloat(), (measuredHeight.toFloat() / 2 - ySpacing).toFloat(), radius, paint)
+    }
+
 
     private fun drawText(canvas: Canvas) {
         paint.apply {
