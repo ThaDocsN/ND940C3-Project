@@ -10,6 +10,7 @@ import android.content.IntentFilter
 import android.net.Uri
 import android.os.Bundle
 import android.widget.RadioButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import com.udacity.databinding.ActivityMainBinding
@@ -45,11 +46,15 @@ class MainActivity : AppCompatActivity() {
     private fun getUrl() {
         val btnId = binding.contentView.rgUrl.checkedRadioButtonId
         val rb = findViewById<RadioButton>(btnId)
-        when (rb.text.toString()) {
-            binding.contentView.rbGlide.text -> download()
-            binding.contentView.rbStarterProject.text -> download()
-            binding.contentView.rbRetrofit.text -> download()
-            else -> download()
+        if (rb != null) {
+            when (rb.text.toString()) {
+                binding.contentView.rbGlide.text -> download()
+                binding.contentView.rbStarterProject.text -> download()
+                binding.contentView.rbRetrofit.text -> download()
+                else -> download()
+            }
+        }else{
+            Toast.makeText(applicationContext, "Select an Option", Toast.LENGTH_SHORT).show()
         }
     }
 

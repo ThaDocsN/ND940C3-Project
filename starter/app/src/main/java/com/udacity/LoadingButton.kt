@@ -7,30 +7,47 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import com.udacity.ButtonState.*
+import timber.log.Timber
 import kotlin.math.min
 import kotlin.properties.Delegates
 
 class LoadingButton @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
 ) : View(context, attrs, defStyleAttr) {
-    private var radius = 0.0f
-    private var widthSize = 0
-    private var heightSize = 0
+
     private var txtString:String
     private var btnColor:Int
     private var txtColor:Int
-    private val xSpacing = 200.0
-    private val ySpacing = 15.0
-    private var paint = Paint(Paint.ANTI_ALIAS_FLAG)
+
+    private var radius     = 0.0f
+    private var widthSize  = 0
+    private var heightSize = 0
+    private val xSpacing   = 200.0
+    private val ySpacing   = 15.0
+    private var paint      = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val valueAnimator = ValueAnimator()
 
-    private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, new ->
+    private var buttonState: ButtonState by Delegates.observable<ButtonState>(Completed) { p, old, new ->
+        when(new){
+            Clicked   -> showCircle = true
+            Loading   -> println("Downloading")
+            Completed -> println("Completed")
+        }
+    }
 
+    private var showCircle:Boolean by Delegates.observable(false){_,_, newValue ->
+        if (newValue){
+            txtString = "Downloading"
+            btnColor  = Color.BLUE
+            invalidate()
+        }
     }
 
 
     init {
+        isClickable = true
         context.theme.obtainStyledAttributes(
             attrs,
             R.styleable.LoadingButton,
@@ -50,12 +67,19 @@ class LoadingButton @JvmOverloads constructor(
 
     }
 
+    override fun performClick(): Boolean {
+        super.performClick()
+        buttonState = Clicked
+        return true
+    }
+
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         drawButton(canvas)
         drawText(canvas)
-        drawCircle(canvas)
-
+        if (showCircle){
+            drawCircle(canvas)
+        }
     }
 
     private fun drawCircle(canvas: Canvas) {
@@ -84,13 +108,13 @@ class LoadingButton @JvmOverloads constructor(
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         val minw: Int = paddingLeft + paddingRight + suggestedMinimumWidth
-        val w: Int = resolveSizeAndState(minw, widthMeasureSpec, 1)
-        val h: Int = resolveSizeAndState(
+        val w: Int    = resolveSizeAndState(minw, widthMeasureSpec, 1)
+        val h: Int    = resolveSizeAndState(
             MeasureSpec.getSize(w),
             heightMeasureSpec,
             0
         )
-        widthSize = w
+        widthSize  = w
         heightSize = h
         setMeasuredDimension(w, h)
     }
