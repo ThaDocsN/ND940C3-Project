@@ -51,7 +51,6 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
-
     init {
         isClickable = true
         context.theme.obtainStyledAttributes(
@@ -78,8 +77,7 @@ class LoadingButton @JvmOverloads constructor(
         drawButton(canvas)
         drawText(canvas)
         if (showCircle){
-            val progressBar = createProgressBar()
-            canvas.drawRect(0f,0f, progressBar, measuredHeight.toFloat(), paint)
+            canvas.drawRect(0f,0f, createProgressBar(), measuredHeight.toFloat(), paint)
             drawText(canvas)
             drawCircle(canvas)
         }
@@ -98,14 +96,12 @@ class LoadingButton @JvmOverloads constructor(
             style = Paint.Style.FILL
         }
 
-        val arc = progress * 360
         val radius = (progress / 2) * 45
         canvas.drawCircle(
             (measuredWidth.toFloat() / 2 + xSpacing).toFloat(),
             (measuredHeight.toFloat() / 2 - ySpacing).toFloat(),
             radius, paint)
     }
-
 
     private fun drawText(canvas: Canvas) {
         paint.apply {
@@ -130,8 +126,6 @@ class LoadingButton @JvmOverloads constructor(
             heightMeasureSpec,
             0
         )
-
         setMeasuredDimension(w, h)
     }
-
 }
