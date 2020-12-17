@@ -8,7 +8,6 @@ import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
 import com.udacity.ButtonState.*
-import timber.log.Timber
 import kotlin.math.min
 import kotlin.properties.Delegates
 
@@ -20,27 +19,34 @@ class LoadingButton @JvmOverloads constructor(
     private var btnColor:Int
     private var txtColor:Int
 
-    private var radius     = 0.0f
-    private var widthSize  = 0
-    private var heightSize = 0
-    private val xSpacing   = 200.0
-    private val ySpacing   = 15.0
-    private var paint      = Paint(Paint.ANTI_ALIAS_FLAG)
+    private var progress    = 0f
+    private val xSpacing    = 200.0
+    private val ySpacing    = 15.0
+    private var paint       = Paint(Paint.ANTI_ALIAS_FLAG)
 
-    private val valueAnimator = ValueAnimator()
+    private var valueAnimator = ValueAnimator()
 
-    private var buttonState: ButtonState by Delegates.observable<ButtonState>(Completed) { p, old, new ->
+    private var buttonState: ButtonState by Delegates.observable<ButtonState>(Completed) { _, _, new ->
         when(new){
-            Clicked   -> showCircle = true
-            Loading   -> println("Downloading")
+            Clicked -> println("Clicked")
+            Loading -> showCircle = true
             Completed -> println("Completed")
         }
     }
 
     private var showCircle:Boolean by Delegates.observable(false){_,_, newValue ->
         if (newValue){
+            valueAnimator = ValueAnimator.ofFloat(0f,1f).apply {
+                addUpdateListener {
+                    progress = animatedValue as Float
+                    invalidate()
+                }
+                repeatMode  = ValueAnimator.RESTART
+                repeatCount = ValueAnimator.INFINITE
+                duration    = 5000
+                start()
+            }
             txtString = "Downloading"
-            btnColor  = Color.BLUE
             invalidate()
         }
     }
@@ -61,15 +67,9 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
-    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
-        super.onSizeChanged(w, h, oldw, oldh)
-        radius = (min(w, h) / 2 * .6).toFloat()
-
-    }
-
     override fun performClick(): Boolean {
         super.performClick()
-        buttonState = Clicked
+        buttonState = Loading
         return true
     }
 
@@ -78,8 +78,18 @@ class LoadingButton @JvmOverloads constructor(
         drawButton(canvas)
         drawText(canvas)
         if (showCircle){
+            val progressBar = createProgressBar()
+            canvas.drawRect(0f,0f, progressBar, measuredHeight.toFloat(), paint)
+            drawText(canvas)
             drawCircle(canvas)
         }
+    }
+
+    private fun createProgressBar(): Float {
+        val progressBar = progress * measuredWidth
+        paint.color     = Color.RED
+        paint.style     = Paint.Style.FILL
+        return progressBar
     }
 
     private fun drawCircle(canvas: Canvas) {
@@ -87,7 +97,13 @@ class LoadingButton @JvmOverloads constructor(
             color = Color.YELLOW
             style = Paint.Style.FILL
         }
-        canvas.drawCircle((measuredWidth.toFloat() / 2 + xSpacing).toFloat(), (measuredHeight.toFloat() / 2 - ySpacing).toFloat(), radius, paint)
+
+        val arc = progress * 360
+        val radius = (progress / 2) * 45
+        canvas.drawCircle(
+            (measuredWidth.toFloat() / 2 + xSpacing).toFloat(),
+            (measuredHeight.toFloat() / 2 - ySpacing).toFloat(),
+            radius, paint)
     }
 
 
@@ -114,8 +130,7 @@ class LoadingButton @JvmOverloads constructor(
             heightMeasureSpec,
             0
         )
-        widthSize  = w
-        heightSize = h
+
         setMeasuredDimension(w, h)
     }
 
