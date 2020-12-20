@@ -20,8 +20,8 @@ class LoadingButton @JvmOverloads constructor(
     private var txtColor:Int
 
     private var progress    = 0f
-    private val xSpacing    = 200.0
-    private val ySpacing    = 15.0
+    private val xSpacing    = 200f
+    private val ySpacing    = 30f
     private var paint       = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private var valueAnimator = ValueAnimator()
@@ -96,11 +96,18 @@ class LoadingButton @JvmOverloads constructor(
             style = Paint.Style.FILL
         }
 
-        val radius = (progress / 2) * 45
-        canvas.drawCircle(
-            (measuredWidth.toFloat() / 2 + xSpacing).toFloat(),
-            (measuredHeight.toFloat() / 2 - ySpacing).toFloat(),
-            radius, paint)
+        val arc = measuredHeight/2
+        val side = (measuredWidth/2) + xSpacing
+        val top = (measuredHeight/2) - ySpacing
+        val smallCircle = progress * 360f
+
+        canvas.drawArc(
+            side,
+            top,
+            side + arc,
+            top + arc,
+            0f, smallCircle, true, paint)
+
     }
 
     private fun drawText(canvas: Canvas) {

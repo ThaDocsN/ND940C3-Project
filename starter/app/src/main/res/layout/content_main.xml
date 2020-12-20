@@ -22,19 +22,19 @@
             android:id="@+id/rb_glide"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Udacity: Android Kotlin Nanodegree" />
+            android:text="@string/udacity_android_kotlin_nanodegree" />
 
         <RadioButton
             android:id="@+id/rb_starter_project"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Project 3 repository" />
+            android:text="@string/project_3_repository" />
 
         <RadioButton
             android:id="@+id/rb_retrofit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Retrofit" />
+            android:text="@string/retrofit" />
     </RadioGroup>
 
     <com.udacity.LoadingButton
