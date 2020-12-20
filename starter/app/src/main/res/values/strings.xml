@@ -14,4 +14,7 @@
     <string name="udacity_android_kotlin_nanodegree">Udacity: Android Kotlin Nanodegree</string>
     <string name="project_3_repository">Project 3 repository</string>
     <string name="retrofit">Retrofit</string>
+    <string name="glide">https://github.com/bumptech/glide</string>
+    <string name="starter">https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter</string>
+    <string name="retrofit_url">https://github.com/square/retrofit</string>
 </resources>

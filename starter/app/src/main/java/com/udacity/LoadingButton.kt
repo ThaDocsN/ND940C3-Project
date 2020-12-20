@@ -21,7 +21,7 @@ class LoadingButton @JvmOverloads constructor(
 
     private var progress    = 0f
     private val xSpacing    = 200f
-    private val ySpacing    = 30f
+    private val ySpacing    = 45f
     private var paint       = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private var valueAnimator = ValueAnimator()
@@ -96,9 +96,9 @@ class LoadingButton @JvmOverloads constructor(
             style = Paint.Style.FILL
         }
 
-        val arc = measuredHeight/2
-        val side = (measuredWidth/2) + xSpacing
-        val top = (measuredHeight/2) - ySpacing
+        val arc         = measuredHeight/2
+        val side        = (measuredWidth/2) + xSpacing
+        val top         = (measuredHeight/2) - ySpacing
         val smallCircle = progress * 360f
 
         canvas.drawArc(

@@ -48,10 +48,9 @@ class MainActivity : AppCompatActivity() {
         val rb = findViewById<RadioButton>(btnId)
         if (rb != null) {
             when (rb.text.toString()) {
-                binding.contentView.rbGlide.text -> download()
-                binding.contentView.rbStarterProject.text -> download()
-                binding.contentView.rbRetrofit.text -> download()
-                else -> download()
+                binding.contentView.rbGlide.text -> download(getString(R.string.glide))
+                binding.contentView.rbStarterProject.text -> download(getString(R.string.starter))
+                binding.contentView.rbRetrofit.text -> download(getString(R.string.retrofit_url))
             }
         }else{
             Toast.makeText(applicationContext, "Select an Option", Toast.LENGTH_SHORT).show()
@@ -64,18 +63,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun download() {
+    private fun download(url:String) {
         val request =
-            DownloadManager.Request(Uri.parse(URL))
+            DownloadManager.Request(Uri.parse(url))
                 .setTitle(getString(R.string.app_name))
                 .setDescription(getString(R.string.app_description))
                 .setRequiresCharging(false)
                 .setAllowedOverMetered(true)
                 .setAllowedOverRoaming(true)
+                .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION)
 
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         downloadID =
             downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+        Timber.i(downloadID.toString())
     }
 
     companion object {
