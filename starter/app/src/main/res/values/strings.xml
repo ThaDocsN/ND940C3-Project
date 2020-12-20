@@ -17,4 +17,7 @@
     <string name="glide">https://github.com/bumptech/glide</string>
     <string name="starter">https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter</string>
     <string name="retrofit_url">https://github.com/square/retrofit</string>
+
+    <string name="download_notification_channel_id" translatable="false">download_channel</string>
+    <string name="download_notification_channel_name" translatable="true">Download</string>
 </resources>
