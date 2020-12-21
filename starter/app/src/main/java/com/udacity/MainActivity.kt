@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var pendingIntent: PendingIntent
     private lateinit var action: NotificationCompat.Action
     private lateinit var binding: ActivityMainBinding
+    private lateinit var selectedUrl:String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +50,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createChannel(channelId: String, channelName: String) {
-        // Check to see if the API Level is a API Level 26 as it requires a channel to be created
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationChannel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
             notificationChannel.enableLights(true)
@@ -65,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         val btnId = binding.contentView.rgUrl.checkedRadioButtonId
         val rb = findViewById<RadioButton>(btnId)
         if (rb != null) {
+            selectedUrl = rb.text.toString()
             when (rb.text.toString()) {
                 binding.contentView.rbGlide.text -> download(getString(R.string.glide))
                 binding.contentView.rbStarterProject.text -> download(getString(R.string.starter))
@@ -78,7 +79,7 @@ class MainActivity : AppCompatActivity() {
     private val receiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
-            notificationManager.sendNotification("Test", applicationContext, "Complete")
+            notificationManager.sendNotification(selectedUrl, applicationContext, "Complete")
         }
     }
 
@@ -94,17 +95,13 @@ class MainActivity : AppCompatActivity() {
                 .setRequiresCharging(false)
                 .setAllowedOverMetered(true)
                 .setAllowedOverRoaming(true)
-               // .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_ONLY_COMPLETION)
 
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         downloadID =
             downloadManager.enqueue(request)// enqueue puts the download request in the queue.
-        Timber.i(downloadID.toString())
     }
 
     companion object {
-        private const val URL =
-            "https://github.com/udacity/nd940-c3-advanced-android-programming-project-starter/archive/master.zip"
         private const val CHANNEL_ID = "channelId"
     }
 
@@ -120,7 +117,7 @@ class MainActivity : AppCompatActivity() {
             .setSmallIcon(R.drawable.ic_assistant_black_24dp)
             .setContentTitle(appContext.getString(R.string.notification_title))
             .setContentText(messageBody)
-            .addAction(R.drawable.ic_baseline_play_arrow_24,"View", pendingIntent)
+            .addAction(R.drawable.ic_launcher_foreground,"View Download", pendingIntent)
 
         notify(NOTIFICATION_ID, builder.build())
     }
