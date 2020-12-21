@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import android.widget.Toast
 import com.udacity.ButtonState.*
 import kotlin.math.min
 import kotlin.properties.Delegates
@@ -28,10 +29,14 @@ class LoadingButton @JvmOverloads constructor(
 
     private var buttonState: ButtonState by Delegates.observable<ButtonState>(Completed) { _, _, new ->
         when(new){
-            Clicked -> println("Clicked")
+            Clicked -> setToast(context, "Clicked")
             Loading -> showCircle = true
-            Completed -> println("Completed")
+            Completed -> setToast(context, "Completed")
         }
+    }
+
+    private fun setToast(context: Context, msg:String) {
+        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
     }
 
     private var showCircle:Boolean by Delegates.observable(false){_,_, newValue ->
@@ -77,6 +82,7 @@ class LoadingButton @JvmOverloads constructor(
         drawButton(canvas)
         drawText(canvas)
         if (showCircle){
+            buttonState = Clicked
             canvas.drawRect(0f,0f, createProgressBar(), measuredHeight.toFloat(), paint)
             drawText(canvas)
             drawCircle(canvas)
