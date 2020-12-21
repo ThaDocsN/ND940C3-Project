@@ -105,7 +105,6 @@ class MainActivity : AppCompatActivity() {
         private const val CHANNEL_ID = "channelId"
     }
 
-
     fun NotificationManager.sendNotification(messageBody: String, appContext:Context, status:String){
 
         val intent = Intent(appContext, DetailActivity::class.java)

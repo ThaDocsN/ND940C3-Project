@@ -24,7 +24,7 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    fun returnToMainActivity() {
+    private fun returnToMainActivity() {
         val  main = Intent(this, MainActivity::class.java)
         startActivity(main)
     }
