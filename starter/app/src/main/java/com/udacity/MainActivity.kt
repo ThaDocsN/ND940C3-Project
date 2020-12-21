@@ -71,8 +71,10 @@ class MainActivity : AppCompatActivity() {
                 binding.contentView.rbStarterProject.text -> download(getString(R.string.starter))
                 binding.contentView.rbRetrofit.text -> download(getString(R.string.retrofit_url))
             }
+            binding.contentView.customButton.getButtonState(ButtonState.Loading)
         }else{
             Toast.makeText(applicationContext, "Select an Option", Toast.LENGTH_SHORT).show()
+            binding.contentView.customButton.getButtonState(ButtonState.Completed)
         }
     }
 
@@ -80,6 +82,7 @@ class MainActivity : AppCompatActivity() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val id = intent?.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1)
             notificationManager.sendNotification(selectedUrl, applicationContext, "Complete")
+            binding.contentView.customButton.getButtonState(ButtonState.Completed)
         }
     }
 
@@ -99,6 +102,11 @@ class MainActivity : AppCompatActivity() {
         val downloadManager = getSystemService(DOWNLOAD_SERVICE) as DownloadManager
         downloadID =
             downloadManager.enqueue(request)// enqueue puts the download request in the queue.
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(receiver)
+        super.onDestroy()
     }
 
     companion object {

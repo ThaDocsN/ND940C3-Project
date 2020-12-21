@@ -31,8 +31,21 @@ class LoadingButton @JvmOverloads constructor(
         when(new){
             Clicked -> setToast(context, "Clicked")
             Loading -> showCircle = true
-            Completed -> setToast(context, "Completed")
+            Completed -> completeAnimation()
         }
+    }
+
+    private fun completeAnimation() {
+        valueAnimator.cancel()
+        showCircle = false
+        progress = 0f
+        txtString = "Download"
+        btnColor = Color.BLACK
+        invalidate()
+    }
+
+    fun getButtonState(state: ButtonState){
+        buttonState = state
     }
 
     private fun setToast(context: Context, msg:String) {
@@ -71,18 +84,11 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
-    override fun performClick(): Boolean {
-        super.performClick()
-        buttonState = Loading
-        return true
-    }
-
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
         drawButton(canvas)
         drawText(canvas)
         if (showCircle){
-            buttonState = Clicked
             canvas.drawRect(0f,0f, createProgressBar(), measuredHeight.toFloat(), paint)
             drawText(canvas)
             drawCircle(canvas)
